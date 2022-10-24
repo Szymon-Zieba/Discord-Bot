@@ -17,8 +17,12 @@ export const startFollow = async (productName) => {
         // -----------------------------------------------------------------------------------
 
         const {linksToProduct, avergePrice} = await getLinksToProduct(page)
-        const dataOfProductFromWebsite = await goOnEachSite(avergePrice, linksToProduct, browser)
+        const followed = await goOnEachSite(avergePrice, linksToProduct, browser)
+        const dataOfProductFromWebsite = followed.filter(el => el.price > 5)
         closeBrowser(browser)
+        //----------------------- DOROBIC POWIADOMIENIE DO DISCORDA O NAJNIZSZEJ CENIE -------------------
+        //
+        // ----------------------------------------------------------------------------------------------
         return { dataOfProductFromWebsite, avergePrice }
     }
     catch (err){

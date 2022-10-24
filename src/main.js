@@ -17,13 +17,7 @@ const startMain = async () => {
         newFollowedToCheck.push(goOnEachSite(product.avergePrice, product.listOfLinks, browser[product.id]))
     }
     let newDataToCompare = await Promise.all(newFollowedToCheck)
-    console.log(newDataToCompare)
 
-    // for(let product of newDataToCompare){
-    //     product.listOfLinks.sort( (a,b) => {
-    //         return a - b
-    //     })
-    // }
     
     for(let product of followed){
         closeBrowser(browser[product.id])  

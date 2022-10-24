@@ -33,15 +33,11 @@ export const follow = async (nameProduct) => {
         avergePrice,
         listOfLinks: dataOfProductFromWebsite
     })
-    for(let product of followed){
+    for(let product of followed ){
         product.listOfLinks.sort( (a,b) => {
             return a.price - b.price
         })
     }
-    // const filtered = followed.filter(
-    //     (product) =>  product.listOfLinks.price != -1
-    // )
-
     const newFollowed = JSON.stringify(followed)
     overWriteFile('followed.json', newFollowed)
 }
