@@ -1,47 +1,47 @@
-import express from "express"
-import mongoose from "mongoose"
+import mongoose, { Schema } from "mongoose"
+import { Model } from "./schemas.js"
+await mongoose.connect('mongodb://root:example@mongo:27017/')
 
-const app = express();
+export const follow = async (wholeData) => {
 
-const uri = 'mongodb+srv://admin:Admin123@products.txuh46a.mongodb.net/?retryWrites=true&w=majority'
+    const product = new Model({
+        name: wholeData.name,
+        avergePrice: wholeData.avergePrice,
+        listOfLinks: wholeData.listOfLinks,
+    })
 
-const connect = async() => {
-    try{
-        mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
-        console.log("connected")
-        // const db = mongoose.connection;
-        // db.on("error", console.error.bind(console, "MongoDB connection error:"));
-        const Schema = mongoose.Schema;
-
-        const productSchema = new Schema({
-            name: String,
-            avergePrice: Number,
-            listOfLinks: [{price: String, link: String}]
-        });
-
-        const Products = mongoose.model('products', productSchema);
-        const product = new Products({
-            name: "DUPA",
-            avergePrice: 321321,
-            listOfLinks: [{price: "DUPA", link: "DUPA"
-            }]
-        })
-        const filter = {}
-        Products.find({filter})
-            .exec((err, product) => {
-                if (err) return handleError(err);
-                console.log("The author is %s", product[0]);
-            });
-
-    } catch(err){
-    
-        console.error(err)
-    }
+    await product.save()
 
 }
 
-connect()
+export const unfollow = async (deleteProductName) => {
 
-app.listen(8000, () => {
-    console.log("Server started on port 8000")
-})
+    Model.findOneAndDelete({name: deleteProductName }, function (err, docs) {
+        if (err){
+            console.log(err)
+        }
+    })
+}
+
+export const checkifExist = async (name, msg) => {
+
+    if( await Model.findOne({name: name})){
+        msg.reply("Exist in database")
+        return true
+    }
+    return false
+}
+
+
+export const update = async (name, link, newPrice) => {
+    const filter = { name: name, listOfLinks: link}
+    const updateData = {$set: {"listOfLinks.$.price": newPrice}}
+    await Model.findOneAndUpdate(filter, updateData, {
+        new: true
+    })
+}
+
+export const shwowAllFollowed = async () => {
+    return Model.find();
+}
+

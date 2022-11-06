@@ -1,26 +1,20 @@
-import ppt from "./pupeteerCreate/puppeter.cjs"
+import ppt from "./puppeteer/pupeteerCreate/puppeter.cjs"
 const { openBrowser, closeBrowser } = ppt
 
-import { getFollowed } from "./followed/followOperations.js"
-import { goOnEachSite } from "./goOnEachShop/goOnEachSite.js"
-
-
-
-const followed = getFollowed()
+import { shwowAllFollowed } from "./mongoDB/server.js"
+import { goOnEachSite } from "./puppeteer/goOnEachSite.js"
 
 const startMain = async () => {
-    let browser = {}
     let newFollowedToCheck = []
+    const followed = await shwowAllFollowed()
 
     for(let product of followed){
-        browser[product.id] = await openBrowser(false)
-        newFollowedToCheck.push(goOnEachSite(product.avergePrice, product.listOfLinks, browser[product.id]))
-    }
-    let newDataToCompare = await Promise.all(newFollowedToCheck)
 
-    
-    for(let product of followed){
-        closeBrowser(browser[product.id])  
+        const browser = await openBrowser(false)
+
+        newFollowedToCheck.push( await goOnEachSite(product.avergePrice, product.listOfLinks, browser))
+
+        closeBrowser(browser)
     }
 
     return newDataToCompare

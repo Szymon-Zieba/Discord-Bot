@@ -34,7 +34,8 @@ export const findPriceByScript = (page, avergePrice) =>
             )
         })
         filtered = items.filter(
-            p =>  p != '' 
+            p =>  p != '' ,
+            p => !p.startsWith(0)
         )
         items= []
         for(let i = 1; i < filtered.length; i++){

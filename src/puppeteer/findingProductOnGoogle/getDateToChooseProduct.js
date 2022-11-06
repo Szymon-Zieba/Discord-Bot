@@ -11,7 +11,7 @@ export const getDateToChooseProduct = async(productName, page) => {
         document.querySelectorAll(".i0X6df").forEach(offer => {
 
             const linkForUser = offer.querySelector('.iXEZD')
-            const textForUser = offer.querySelector('.Xjkr3b')
+            const textForUser = offer.querySelector('.tAxDx')
             
             if(linkForUser){
                 date.push({
