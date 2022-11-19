@@ -1,10 +1,10 @@
-import {shwowAllFollowed} from "../mongoDB/server.js"
+import {showAllFollowed} from "../mongoDB/server.js"
 
 export const showFollowed = async (msg) => {
-    const cos = await shwowAllFollowed()
+    const followed = await showAllFollowed()
     let i = 1
-    for(let el of cos){
-        msg.channel.send(i + '. ' + el.name)
+    for(let product of followed){
+        msg.channel.send(i + '. ' + product.name)
         i++
     }
 }
