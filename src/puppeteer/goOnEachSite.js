@@ -1,19 +1,15 @@
-import ppt from "./pupeteerCreate/puppeter.cjs"
-const { newPage } = ppt
 import { findPriceByTextContent } from "./findingPrice/findPriceByTextContent.js"
+import {closePage, newPage} from "./pupeteerCreate/puppeter.js";
 
 const hanglePage = async (link, avergePrice, browser) => {
     try{
-            const page = await newPage(browser)
-
-            await page.goto(link, {
-                'timeout': 4000 * 1000, 'waitUntil':'load'
-            })   
-            const price = await findPriceByTextContent(page, avergePrice)
-            
-            await page.close()
-            return {price, link}
-        
+        const page = await browser.newPage()
+        await page.goto(link, {
+            'timeout': 4000 * 10000, 'waitUntil':'networkidle0'
+        })
+        const price = await findPriceByTextContent(page, avergePrice)
+        await closePage(page)
+        return {price, link}
     }
     catch (err){
         console.log("ERROR IN hangle page")
@@ -21,20 +17,12 @@ const hanglePage = async (link, avergePrice, browser) => {
     }
 }
 
-export const goOnEachSite = async (avergePrice, linksToProduct, browser) => {
+export const goOnEachSite = async(avergePrice, linksToProduct, browser) => {
     const priceLinkProductEachSite = []
-    try{
-        for(let i = 0; i < linksToProduct.length; i++){
-            const priceLink = hanglePage(linksToProduct[i].link,avergePrice, browser) 
-            if(priceLink){
-                priceLinkProductEachSite.push(priceLink)
-            }
-        }
+    for(let i = 0; i < linksToProduct.length; i++){
+        priceLinkProductEachSite.push(hanglePage(linksToProduct[i].link, avergePrice, browser))
     }
-    catch (err){
-        console.log("ERROR IN goOnEachSite")
-        console.log(err)
-    }
-    return Promise.all(priceLinkProductEachSite)
+    const priceLink = await Promise.all(priceLinkProductEachSite)
+    return priceLink.filter(product => product.price)
 }
 

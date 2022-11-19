@@ -3,7 +3,7 @@ export const getAveragePrice = (dataOfProduct) => {
     dataOfProduct.forEach(el => {
         allPrice += el.price
     })
-    allPrice = allPrice / dataOfProduct.length
+    allPrice = (allPrice / dataOfProduct.length).toFixed(2)
 
     return allPrice
 }

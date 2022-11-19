@@ -41,7 +41,7 @@ export const findPriceByTextContent = (page, avergePrice) =>
 
             const currieces = /zl|zł|pln|,-/i
             
-            if(el.children.length > 4 || !(currieces.test(content))) {
+            if(el.children.length > 5 || !(currieces.test(content))) {
                 return 
             }
 
