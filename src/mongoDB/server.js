@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose"
+import mongoose from "mongoose"
 import { Model, ModelBlackList } from "./schemas.js"
  //await mongoose.connect('mongodb://root:example@mongo:27017/')
 await mongoose.connect('mongodb://root:example@localhost:27017/')
@@ -29,6 +29,14 @@ export const checkExistProduct = async (name, msg) => {
 }
 
 export const updatePrice = async (product) => {
+    if(!await Model.findOne({name: product.name})){
+        return
+    }
+    await Model.findOneAndUpdate({name: product.name},
+        {listOfLinks: product.listOfLinks})
+}
+
+export const updateBlockerPrice = async (product) => {
     await Model.findOneAndUpdate({name: product.name},
         {listOfLinks: product.listOfLinks})
 }
@@ -41,20 +49,18 @@ export const blackList = async (name) => {
     const blacklistProduct = new ModelBlackList({name: name})
     await blacklistProduct.save()
     const followed = await showAllFollowed()
-
-    /// SPRAWDZIC CZY TO DZIALA NA PEWNO
     for(const product of followed){
-        const newProduct = product.listOfLinks.filter(links => links.link.includes(name))
-        await updatePrice(newProduct)
+        const newProduct = {
+            name: product.name,
+            listOfLinks: product.listOfLinks.filter(links => !links.link.includes(name.replace(/ /g, '') + "."))
+        }
+        console.log(newProduct)
+        await updateBlockerPrice(newProduct)
     }
 }
 
 export const deleteBlackList = async (name) => {
-    await ModelBlackList.findOneAndDelete({name: name},function (err, docs) {
-        if (err){
-            console.log(err)
-        }
-    })
+    await ModelBlackList.findOneAndDelete({name: name})
 }
 
 export const checkExistBlackList = async (name, msg) => {

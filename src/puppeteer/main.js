@@ -5,50 +5,40 @@ import { browserQuantity } from "../config.js"
 import {lowerPrice} from "../discord/main.js";
 
 const checkSmallestPrice = async(newDataFromFollowed, listOfLinks) => {
-    const sortLinks = (a, b) => a.link.localeCompare(b.link)
-    newDataFromFollowed.sort(sortLinks)
-    listOfLinks.sort(sortLinks)
     for(let i = 0; i < newDataFromFollowed.length; i++){
-        const old = listOfLinks[i]
         const newProduct = newDataFromFollowed[i]
-        if(newProduct.price !== old.price){
-            console.log("Nowa cena")
-        }
-        if(newProduct.price < listOfLinks[0].price){
+        if(parseFloat(newProduct.price) < parseFloat(listOfLinks[0].price)){
             await lowerPrice(newProduct.link, newProduct.price)
         }
     }
-    // return newDataFromFollowed
 }
 
 const getDataFromWebsites = async (item) => {
-    const browser = await openBrowser(false)
-    const newDataFromFollowed = await goOnEachSite(item.avergePrice, item.listOfLinks, browser)
-    console.log("TuTAJ")
-    await checkSmallestPrice(newDataFromFollowed, item.listOfLinks)
+    const browser = await openBrowser(true)
+    const newDataFromFollowed = {
+        name: item.name,
+        listOfLinks: await goOnEachSite(item.avergePrice, item.listOfLinks, browser)
+    }
+    await checkSmallestPrice(newDataFromFollowed.listOfLinks, item.listOfLinks)
+    newDataFromFollowed.listOfLinks.sort((a,b) => a.price - b.price)
     await updatePrice(newDataFromFollowed)
     closeBrowser(browser)
-    return newDataFromFollowed
 }
 
 const getNewFollowed = async(followed) => {
-    const newDataFromFollowed = []
     for(let i = 0; i < followed.length; i += browserQuantity) {
         const chunk = followed.slice(i, i+browserQuantity)
-        const newFollowed = await Promise.all(chunk.map(item => getDataFromWebsites(item)))
-        newDataFromFollowed.push(...newFollowed)
+        await Promise.all(chunk.map(item => getDataFromWebsites(item)))
     }
-    return newDataFromFollowed
 }
 
 const searchFollowedSites = async() => {
+    console.log("refresh")
     const followed = await showAllFollowed()
     if (followed) {
         await getNewFollowed(followed)
     }
+    setTimeout(await searchFollowedSites(), 1000 * 60 * 10);
 }
 
-const main = () => {
-    searchFollowedSites()
-}
-main()
+await searchFollowedSites()

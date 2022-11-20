@@ -5,7 +5,7 @@ const hanglePage = async (link, avergePrice, browser) => {
     try{
         const page = await browser.newPage()
         await page.goto(link, {
-            'timeout': 4000 * 10000, 'waitUntil':'networkidle0'
+            'timeout': 4000 * 60 * 4, 'waitUntil':'networkidle2'
         })
         const price = await findPriceByTextContent(page, avergePrice)
         await closePage(page)

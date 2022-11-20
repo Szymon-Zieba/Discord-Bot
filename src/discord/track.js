@@ -23,8 +23,7 @@ export const track = async (msg) => {
     msg.reply("Wait we are searching for best price...")
     const index = data.first().content
     const { dataOfProductFromWebsite, avergePrice } = await startFollow(dateToChooseProduct[index - 1])
-    console.log('\x1b[36m%s\x1b[0m', dataOfProductFromWebsite[0]);
-    if(!dataOfProductFromWebsite[0] ){W
+    if(!dataOfProductFromWebsite[0] ){
         msg.channel.send(
             "No product"
         )
