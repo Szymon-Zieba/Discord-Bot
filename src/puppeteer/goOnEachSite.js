@@ -3,7 +3,7 @@ import {closePage, newPage} from "./pupeteerCreate/puppeter.js";
 
 const hanglePage = async (link, avergePrice, browser) => {
     try{
-        const page = await browser.newPage()
+        const page = await newPage(browser)
         await page.goto(link, {
             'timeout': 4000 * 60 * 4, 'waitUntil':'networkidle2'
         })

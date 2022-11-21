@@ -1,7 +1,7 @@
 import {showAllFollowed, updatePrice} from "../mongoDB/server.js"
 import {goOnEachSite} from "./goOnEachSite.js";
 import {closeBrowser, openBrowser} from "./pupeteerCreate/puppeter.js";
-import { browserQuantity } from "../config.js"
+import {browserQuantity} from "../config.js"
 import {lowerPrice} from "../discord/main.js";
 
 const checkSmallestPrice = async(newDataFromFollowed, listOfLinks) => {
@@ -29,16 +29,18 @@ const getNewFollowed = async(followed) => {
     for(let i = 0; i < followed.length; i += browserQuantity) {
         const chunk = followed.slice(i, i+browserQuantity)
         await Promise.all(chunk.map(item => getDataFromWebsites(item)))
+        console.log("OK")
     }
 }
 
 const searchFollowedSites = async() => {
     console.log("refresh")
+
     const followed = await showAllFollowed()
     if (followed) {
         await getNewFollowed(followed)
     }
-    setTimeout(await searchFollowedSites(), 1000 * 60 * 10);
+    setTimeout(await searchFollowedSites(), 1000 * 60 * 2);
 }
 
 await searchFollowedSites()

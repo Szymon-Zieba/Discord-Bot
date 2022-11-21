@@ -54,7 +54,6 @@ export const blackList = async (name) => {
             name: product.name,
             listOfLinks: product.listOfLinks.filter(links => !links.link.includes(name.replace(/ /g, '') + "."))
         }
-        console.log(newProduct)
         await updateBlockerPrice(newProduct)
     }
 }

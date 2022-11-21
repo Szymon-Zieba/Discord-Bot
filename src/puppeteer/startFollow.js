@@ -19,7 +19,7 @@ export const getDateForChooseProduct = async (productName) => {
 
 export const startFollow = async (dateToChooseProduct) => {
     try {
-        const browser = await openBrowser(true )
+        const browser = await openBrowser(true)
         const page = await newPage(browser)
         await page.goto(dateToChooseProduct.link)
 
