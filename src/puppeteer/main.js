@@ -7,14 +7,15 @@ import {lowerPrice} from "../discord/main.js";
 const checkSmallestPrice = async(newDataFromFollowed, listOfLinks) => {
     for(let i = 0; i < newDataFromFollowed.length; i++){
         const newProduct = newDataFromFollowed[i]
-        if(parseFloat(newProduct.price) < parseFloat(listOfLinks[0].price)){
+        const newPrice = parseFloat(newProduct.price)
+        if(newPrice < parseFloat(listOfLinks[0].price) && newPrice > 0){
             await lowerPrice(newProduct.link, newProduct.price)
         }
     }
 }
 
 const getDataFromWebsites = async (item) => {
-    const browser = await openBrowser(true)
+    const {browser, chromeTmpDataDir} = await openBrowser(false)
     const newDataFromFollowed = {
         name: item.name,
         listOfLinks: await goOnEachSite(item.avergePrice, item.listOfLinks, browser)
@@ -22,7 +23,7 @@ const getDataFromWebsites = async (item) => {
     await checkSmallestPrice(newDataFromFollowed.listOfLinks, item.listOfLinks)
     newDataFromFollowed.listOfLinks.sort((a,b) => a.price - b.price)
     await updatePrice(newDataFromFollowed)
-    closeBrowser(browser)
+    closeBrowser(browser, chromeTmpDataDir)
 }
 
 const getNewFollowed = async(followed) => {
@@ -31,16 +32,18 @@ const getNewFollowed = async(followed) => {
         await Promise.all(chunk.map(item => getDataFromWebsites(item)))
         console.log("OK")
     }
+    return "nic"
 }
 
-const searchFollowedSites = async() => {
+const searchFollowedSites = async(i) => {
     console.log("refresh")
 
     const followed = await showAllFollowed()
     if (followed) {
         await getNewFollowed(followed)
     }
-    setTimeout(await searchFollowedSites(), 1000 * 60 * 2);
+    console.log(i++)
+    setTimeout(() => searchFollowedSites(i), 1000 * 3 );
 }
-
-await searchFollowedSites()
+let i = 0
+await searchFollowedSites(i)

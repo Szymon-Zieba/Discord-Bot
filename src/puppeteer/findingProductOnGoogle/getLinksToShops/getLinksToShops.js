@@ -6,7 +6,6 @@ export const getLinksToProduct = async (page) => {
         const fetchLinks = () => {
             let i = 1;
             document.querySelectorAll("#sh-osd__online-sellers-cont > .sh-osd__offer-row").forEach(data => {
-                // dsadas
                 if(!(data.querySelector('a').href).includes('allegro') && !(data.querySelector('a').href).includes('aliexpress') && !(data.querySelector('a').href).includes('erli.pl')){
                     if(data.querySelector('td > span').innerText.split('PLN')[1] == "PLN"){
                         dataProduct.push({

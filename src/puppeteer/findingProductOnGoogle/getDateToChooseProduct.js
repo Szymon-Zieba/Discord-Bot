@@ -3,7 +3,10 @@ import {domainStartURL, domainEndURL} from "./config.js"
 export const getDateToChooseProduct = async(productName, page) => {
     const linkName = domainStartURL + productName + domainEndURL
 
-    await page.goto(linkName)
+    await page.goto(linkName, {
+        waitUntil: ['load', 'networkidle2', "domcontentloaded"],
+        timeout: 60000
+    })
     await page.click("button")
     await page.waitForSelector(".i0X6df")
 

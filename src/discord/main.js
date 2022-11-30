@@ -33,23 +33,34 @@ export const lowerPrice = async(link, price) => {
 client.on('messageCreate', async (msg) => {
     if(msg.author.bot) return
 
-    if(msg.content.startsWith("!commands")) {
-        await commands(msg)
-    }
-    if(msg.content.startsWith("!track")) {
-        await track(msg)
-    }
-    if(msg.content.startsWith("!delete")) {
-        await unFollowProduct(msg)
-    }
-    if(msg.content.startsWith("!show")) {
-        await showFollowed(msg)
-    }
-    if(msg.content.startsWith("!block")) {
-        await block(msg)
-    }
-    if(msg.content.startsWith("!unblock")) {
-       await unblock(msg)
+    const content = msg.content
+    switch(true){
+        case content.startsWith("!commands"):
+            await commands(msg)
+            break
+
+        case content.startsWith("!track"):
+            await track(msg)
+            break
+
+        case content.startsWith("!delete"):
+            await unFollowProduct(msg)
+            break
+
+        case content.startsWith("!show"):
+            await showFollowed(msg)
+            break
+
+        case content.startsWith("!block"):
+            await block(msg)
+            break
+
+        case content.startsWith("!unblock"):
+            await unblock(msg)
+            break
+
+        default:
+            console.log("none")
     }
 })
 

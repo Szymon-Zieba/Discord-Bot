@@ -4,6 +4,8 @@ puppeteer.use(StealthPlugin())
 import AdblockerPlugin from 'puppeteer-extra-plugin-adblocker'
 puppeteer.use(AdblockerPlugin({ blockTrackers: true }))
 
+import fs from "fs-extra"
+
 export const openBrowser = async (check) => {
     const browser = await puppeteer.launch({
         // in DOCKER
@@ -12,13 +14,13 @@ export const openBrowser = async (check) => {
         ignoreHTTPSErrors: true,
         args: [
             '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36',
-            '--use-gl=egl',
             '--no-sandbox',
             '--disable-setuid-sandbox',
             `--window-size=1920,1080`,
-            // '--remote-debugging-port=9222',
-            // "--remote-debugging-address=0.0.0.0",
             // '--disable-gpu',
+            // '--single-process',
+            '--disable-web-security',
+            '--disable-dev-profile',
             // "--disable-features=IsolateOrigins, site-per-process",
             // '--blink-settings=imagesEnabled=true',
             // '--disable-infobars',
@@ -27,16 +29,29 @@ export const openBrowser = async (check) => {
             // '--ignore-certifcate-errors-spki-list',
         ],
         defaultViewport: {
-            width:1920,
-            height:1080
+            "width":1920,
+            "height":1080
         }
     })
-    return browser
+    let chromeTmpDataDir = null;
+    let chromeSpawnArgs = browser.process().spawnargs;
+    for (let i = 0; i < chromeSpawnArgs.length; i++) {
+        if (chromeSpawnArgs[i].indexOf("--user-data-dir=") === 0) {
+            chromeTmpDataDir = chromeSpawnArgs[i].replace("--user-data-dir=", "");
+        }
+    }
+
+    return {browser, chromeTmpDataDir}
 }
 
 export const newPage = async(browser) =>  await browser.newPage()
 
 export const closePage = async(page) => await page.close()
 
-export const closeBrowser = (browser) => browser.close()
+export const closeBrowser = (browser, chromeTmpDataDir) => {
+    browser.close()
+    if (chromeTmpDataDir !== null) {
+        fs.removeSync(chromeTmpDataDir);
+    }
+}
 

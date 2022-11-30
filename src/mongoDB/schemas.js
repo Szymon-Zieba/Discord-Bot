@@ -1,6 +1,4 @@
 import mongoose from "mongoose"
-// Define a schema
-
 
 const productsSchema = new mongoose.Schema({
     name: String,

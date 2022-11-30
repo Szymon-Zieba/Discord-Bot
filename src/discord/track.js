@@ -18,11 +18,15 @@ export const track = async (msg) => {
       return
     }
     msg.reply(dateFromWebsite)
-    const filter = m => m.author.id === msg.author.id && m.content >= 0 && m.content <= 7 
+    const filter = m => m.author.id === msg.author.id && m.content >= 0 && m.content <= 8
     const data =  await msg.channel.awaitMessages({filter, max: 1, time: 100000, errors: ['time', 'maxMatches']})
+    const index = parseInt(data.first().content)
+    if(index === 8){
+        msg.reply("You Stopped searching..")
+        return
+    }
     msg.reply("Wait we are searching for best price...")
-    const index = data.first().content
-    const { dataOfProductFromWebsite, avergePrice } = await startFollow(dateToChooseProduct[index - 1])
+    const { dataOfProductFromWebsite, avergePrice} = await startFollow(dateToChooseProduct[index - 1])
     if(!dataOfProductFromWebsite[0] ){
         msg.channel.send(
             "No product"
@@ -51,7 +55,8 @@ const replyDateToChooseProduct = (dateToChooseProduct) => {
     let string = ''
     let index = 1
     for(const el of dateToChooseProduct){
-      string += index++ +'. '+ el.text  + '\n'
+      string += index++ +'. '+ el.text  + " - more than:" + el.quantity + '\n'
     }
+    string += index + '. Exit searching'
     return string
   }

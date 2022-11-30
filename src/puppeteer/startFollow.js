@@ -5,10 +5,10 @@ import { goOnEachSite } from './goOnEachSite.js';
 
 export const getDateForChooseProduct = async (productName) => {
     try {
-        const browser = await openBrowser(true)
-        const page = await newPage(browser)
+        const {browser, chromeTmpDataDir} = await openBrowser(true)
+        const page = await browser.newPage()
         const dateToChooseProduct = await getDateToChooseProduct(productName, page)
-        closeBrowser(browser)
+        closeBrowser(browser, chromeTmpDataDir)
         return dateToChooseProduct
     }
     catch (err){
@@ -19,18 +19,20 @@ export const getDateForChooseProduct = async (productName) => {
 
 export const startFollow = async (dateToChooseProduct) => {
     try {
-        const browser = await openBrowser(true)
+        const {browser, chromeTmpDataDir} = await openBrowser(true)
         const page = await newPage(browser)
-        await page.goto(dateToChooseProduct.link)
-
+        await page.goto(dateToChooseProduct.link, {
+            'waitUntil': 'networkidle2',
+            'timeout': 0
+        })
         const {linksToProduct, avergePrice} = await getLinksToProduct(page)
         const followed = await goOnEachSite(avergePrice, linksToProduct, browser)
         const dataOfProductFromWebsite = followed.filter(el => el.price > 1)
         dataOfProductFromWebsite.sort( (a,b) => {
             return a.price - b.price
         })
-        closeBrowser(browser)
-        return { dataOfProductFromWebsite, avergePrice }
+        closeBrowser(browser, chromeTmpDataDir)
+        return { dataOfProductFromWebsite, avergePrice}
     }
     catch (err){
         console.log("ERROR IN startFollow")
