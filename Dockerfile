@@ -10,4 +10,4 @@ COPY . .
 
 RUN npm install
 
-CMD ["node", "./src/discord/main.js"]
+CMD ["node", "./src/puppeteer/main.js"]
