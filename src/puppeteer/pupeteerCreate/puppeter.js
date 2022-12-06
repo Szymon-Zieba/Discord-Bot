@@ -1,15 +1,10 @@
-import puppeteer from 'puppeteer-extra'
-import StealthPlugin from 'puppeteer-extra-plugin-stealth'
-puppeteer.use(StealthPlugin())
-import AdblockerPlugin from 'puppeteer-extra-plugin-adblocker'
-puppeteer.use(AdblockerPlugin({ blockTrackers: true }))
-
+import puppeteer from 'puppeteer'
 import fs from "fs-extra"
 
 export const openBrowser = async (check) => {
     const browser = await puppeteer.launch({
         // in DOCKER
-        //executablePath: '/usr/bin/chromium',
+        executablePath: '/usr/bin/chromium',
         headless: check,
         ignoreHTTPSErrors: true,
         args: [
@@ -17,16 +12,6 @@ export const openBrowser = async (check) => {
             '--no-sandbox',
             '--disable-setuid-sandbox',
             `--window-size=1920,1080`,
-            // '--disable-gpu',
-            // '--single-process',
-            '--disable-web-security',
-            '--disable-dev-profile',
-            // "--disable-features=IsolateOrigins, site-per-process",
-            // '--blink-settings=imagesEnabled=true',
-            // '--disable-infobars',
-            // '--window-position=0,0',
-            // '--ignore-certifcate-errors',
-            // '--ignore-certifcate-errors-spki-list',
         ],
         defaultViewport: {
             "width":1920,

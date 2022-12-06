@@ -15,7 +15,7 @@ const checkSmallestPrice = async(newDataFromFollowed, listOfLinks) => {
 }
 
 const getDataFromWebsites = async (item) => {
-    const {browser, chromeTmpDataDir} = await openBrowser(false)
+    const {browser, chromeTmpDataDir} = await openBrowser(true )
     const newDataFromFollowed = {
         name: item.name,
         listOfLinks: await goOnEachSite(item.avergePrice, item.listOfLinks, browser)
@@ -28,11 +28,13 @@ const getDataFromWebsites = async (item) => {
 
 const getNewFollowed = async(followed) => {
     for(let i = 0; i < followed.length; i += browserQuantity) {
-        const chunk = followed.slice(i, i+browserQuantity)
+        let chunk = followed
+        if(browserQuantity !== 1){
+            chunk = followed.slice(i, i+browserQuantity)
+        }
         await Promise.all(chunk.map(item => getDataFromWebsites(item)))
         console.log("OK")
     }
-    return "nic"
 }
 
 const searchFollowedSites = async(i) => {

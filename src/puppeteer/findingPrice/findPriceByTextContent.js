@@ -1,5 +1,5 @@
-export const findPriceByTextContent = (page, avergePrice) =>  
-    page.evaluate(async(avergePrice) => {
+export const findPriceByTextContent = async (page, avergePrice) =>
+    await page.evaluate(async(avergePrice) => {
         // const avergePrice = 3
         const getElementComputedStyle = (el, property) => window.getComputedStyle(el, null).getPropertyValue(property)
 
@@ -63,7 +63,7 @@ export const findPriceByTextContent = (page, avergePrice) =>
             !isNaN(p.text) 
             && p.text != '' 
             && p.offsetTop > 100 
-            && p.offsetTop < 1900
+            && p.offsetTop < 700
             && p.text > avergePrice * 0.15  
         )
 

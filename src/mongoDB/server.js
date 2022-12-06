@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import { Model, ModelBlackList } from "./schemas.js"
- //await mongoose.connect('mongodb://root:example@mongo:27017/')
-await mongoose.connect('mongodb://root:example@localhost:27017/')
+await mongoose.connect('mongodb://root:example@mongo:27017/')
+//await mongoose.connect('mongodb://root:example@localhost:27017/')
 
 export const follow = async (wholeData) => {
     const product = new Model({
@@ -69,9 +69,3 @@ export const checkExistBlackList = async (name, msg) => {
     }
     return false
 }
-
-// Model.findOneAndDelete({_id: '63693ff56874f502240c6722' }, function (err, docs) {
-//     if (err){
-//         console.log(err)
-//     }
-// })

@@ -26,8 +26,14 @@ export const startFollow = async (dateToChooseProduct) => {
             'timeout': 0
         })
         const {linksToProduct, avergePrice} = await getLinksToProduct(page)
-        const followed = await goOnEachSite(avergePrice, linksToProduct, browser)
-        const dataOfProductFromWebsite = followed.filter(el => el.price > 1)
+        let dataOfProductFromWebsite
+        try{
+            const followed = await goOnEachSite(avergePrice, linksToProduct, browser)
+             dataOfProductFromWebsite = followed.filter(el => el.price > 1)
+        } catch(err){
+            console.log(err)
+            console.log("START FOLLOW GO ON EACH SITE")
+        }
         dataOfProductFromWebsite.sort( (a,b) => {
             return a.price - b.price
         })
