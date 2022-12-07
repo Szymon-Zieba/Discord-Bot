@@ -21,7 +21,7 @@ export const track = async (msg) => {
     const filter = m => m.author.id === msg.author.id && m.content >= 0 && m.content <= 8
     const data =  await msg.channel.awaitMessages({filter, max: 1, time: 100000, errors: ['time', 'maxMatches']})
     const index = parseInt(data.first().content)
-    if(index === 8){
+    if(index === dateFromWebsite.length - 1){
         msg.reply("You Stopped searching..")
         return
     }

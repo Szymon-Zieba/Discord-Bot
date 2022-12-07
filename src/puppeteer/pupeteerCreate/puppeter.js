@@ -12,6 +12,7 @@ export const openBrowser = async (check) => {
             '--no-sandbox',
             '--disable-setuid-sandbox',
             `--window-size=1920,1080`,
+            '--lang=pl-PL,pl'
         ],
         defaultViewport: {
             "width":1920,
