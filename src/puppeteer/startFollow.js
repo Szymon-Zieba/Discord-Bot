@@ -7,6 +7,7 @@ import { proxies} from "./pupeteerCreate/proxy.js";
 export const getDateForChooseProduct = async (productName) => {
     try {
         const proxy = proxies[0]
+        console.log(proxy)
         const {browser, chromeTmpDataDir} = await openBrowser(true, proxy)
         const page = await browser.newPage()
         const dateToChooseProduct = await getDateToChooseProduct(productName, page)
