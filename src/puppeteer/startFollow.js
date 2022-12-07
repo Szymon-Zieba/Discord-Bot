@@ -4,10 +4,11 @@ import { getLinksToProduct } from "./findingProductOnGoogle/getLinksToShops/getL
 import { goOnEachSite } from './goOnEachSite.js';
 import { proxies} from "./pupeteerCreate/proxy.js";
 
+
+
 export const getDateForChooseProduct = async (productName) => {
     try {
         const proxy = proxies[0]
-        console.log(proxy)
         const {browser, chromeTmpDataDir} = await openBrowser(true, proxy)
         const page = await browser.newPage()
         const dateToChooseProduct = await getDateToChooseProduct(productName, page)
@@ -22,7 +23,8 @@ export const getDateForChooseProduct = async (productName) => {
 
 export const startFollow = async (dateToChooseProduct) => {
     try {
-        const {browser, chromeTmpDataDir} = await openBrowser(true)
+        const proxy = proxies[0]
+        const {browser, chromeTmpDataDir} = await openBrowser(true, proxy)
         const page = await newPage(browser)
         await page.goto(dateToChooseProduct.link, {
             'waitUntil': 'networkidle2',
