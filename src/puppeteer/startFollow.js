@@ -2,10 +2,12 @@ import { newPage, openBrowser, closeBrowser} from './pupeteerCreate/puppeter.js'
 import { getDateToChooseProduct } from "./findingProductOnGoogle/getDateToChooseProduct.js"
 import { getLinksToProduct } from "./findingProductOnGoogle/getLinksToShops/getLinksToShops.js";
 import { goOnEachSite } from './goOnEachSite.js';
+import { proxies} from "./pupeteerCreate/proxy.js";
 
 export const getDateForChooseProduct = async (productName) => {
     try {
-        const {browser, chromeTmpDataDir} = await openBrowser(true)
+        const proxy = proxies[0]
+        const {browser, chromeTmpDataDir} = await openBrowser(true, proxy)
         const page = await browser.newPage()
         const dateToChooseProduct = await getDateToChooseProduct(productName, page)
         closeBrowser(browser, chromeTmpDataDir)

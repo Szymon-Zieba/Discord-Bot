@@ -3,6 +3,7 @@ import {goOnEachSite} from "./goOnEachSite.js";
 import {closeBrowser, openBrowser} from "./pupeteerCreate/puppeter.js";
 import {browserQuantity} from "../config.js"
 import {lowerPrice} from "../discord/main.js";
+import { proxies } from "./pupeteerCreate/proxy.js"
 
 const checkSmallestPrice = async(newDataFromFollowed, listOfLinks) => {
     for(let i = 0; i < newDataFromFollowed.length; i++){
@@ -14,8 +15,8 @@ const checkSmallestPrice = async(newDataFromFollowed, listOfLinks) => {
     }
 }
 
-const getDataFromWebsites = async (item) => {
-    const {browser, chromeTmpDataDir} = await openBrowser(true )
+const getDataFromWebsites = async (item, proxy) => {
+    const {browser, chromeTmpDataDir} = await openBrowser(true, proxy)
     const newDataFromFollowed = {
         name: item.name,
         listOfLinks: await goOnEachSite(item.avergePrice, item.listOfLinks, browser)
@@ -27,19 +28,21 @@ const getDataFromWebsites = async (item) => {
 }
 
 const getNewFollowed = async(followed) => {
+    let index = 0
     for(let i = 0; i < followed.length; i += browserQuantity) {
+        const proxy = proxies[index]
         let chunk = followed
         if(browserQuantity !== 1){
             chunk = followed.slice(i, i+browserQuantity)
         }
-        await Promise.all(chunk.map(item => getDataFromWebsites(item)))
+        await Promise.all(chunk.map(item => getDataFromWebsites(item, proxy)))
         console.log("OK")
+        index++
     }
 }
 
 const searchFollowedSites = async(i) => {
     console.log("refresh")
-
     const followed = await showAllFollowed()
     if (followed) {
         await getNewFollowed(followed)
