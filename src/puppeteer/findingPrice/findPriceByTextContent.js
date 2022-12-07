@@ -39,7 +39,7 @@ export const findPriceByTextContent = async (page, avergePrice) =>
         elements.forEach(el => {
             let content = el.textContent          
 
-            const currieces = /zl|zł|pln|,-/i
+            const currieces = /zl|zł|pln|,-|$|€/i
             
             if(el.children.length > 5 || !(currieces.test(content))) {
                 return 
