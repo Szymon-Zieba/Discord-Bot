@@ -18,7 +18,7 @@ export const track = async (msg) => {
       return
     }
     msg.reply(dateFromWebsite)
-    const filter = m => m.author.id === msg.author.id && m.content >= 0 && m.content <= 8
+    const filter = m => m.author.id === msg.author.id && m.content >= 0 && m.content <= dateFromWebsite.length -1
     const data =  await msg.channel.awaitMessages({filter, max: 1, time: 100000, errors: ['time', 'maxMatches']})
     const index = parseInt(data.first().content)
     if(index === dateFromWebsite.length - 1){
