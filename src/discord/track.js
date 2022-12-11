@@ -12,16 +12,16 @@ export const track = async (msg) => {
     }
     msg.reply( "Searching for - '" + product + "'")
     const dateToChooseProduct = await getDateForChooseProduct(product)
-    const dateFromWebsite = replyDateToChooseProduct(dateToChooseProduct)
+    const {dateFromWebsite, lastNumber} = replyDateToChooseProduct(dateToChooseProduct)
     if(!dateFromWebsite){
       msg.reply("I don't see product like this in google")
       return
     }
     msg.reply(dateFromWebsite)
-    const filter = m => m.author.id === msg.author.id && m.content >= 0 && m.content <= dateFromWebsite.length -1
+    const filter = m => m.author.id === msg.author.id && m.content > 0 && m.content <= lastNumber
     const data =  await msg.channel.awaitMessages({filter, max: 1, time: 100000, errors: ['time', 'maxMatches']})
     const index = parseInt(data.first().content)
-    if(index === dateFromWebsite.length - 1){
+    if(index === lastNumber){
         msg.reply("You Stopped searching..")
         return
     }
@@ -52,11 +52,11 @@ const replyDateToChooseProduct = (dateToChooseProduct) => {
     if(!dateToChooseProduct){
       return null
     }
-    let string = ''
-    let index = 1
+    let dateFromWebsite = ''
+    let lastNumber = 1
     for(const el of dateToChooseProduct){
-      string += index++ +'. '+ el.text  + " - more than:" + el.quantity + '\n'
+        dateFromWebsite += lastNumber++ +'. '+ el.text  + " - more than:" + el.quantity + '\n'
     }
-    string += index + '. Exit searching'
-    return string
+    dateFromWebsite += lastNumber + '. Exit searching'
+    return {dateFromWebsite, lastNumber}
   }

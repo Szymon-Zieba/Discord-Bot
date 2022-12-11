@@ -38,6 +38,9 @@ const getNewFollowed = async(followed) => {
         await Promise.all(chunk.map(item => getDataFromWebsites(item, proxy)))
         console.log("OK")
         index++
+        if(index === proxies.length){
+            index = 0
+        }
     }
 }
 
