@@ -1,6 +1,5 @@
 import { getAveragePrice } from "./getAvergePrice.js"
 export const getLinksToProduct = async (page) => {
-
     const linksToProduct = await page.evaluate(async() =>{
         let dataProduct = []
         const fetchLinks = () => {

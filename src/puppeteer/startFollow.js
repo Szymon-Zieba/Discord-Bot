@@ -1,16 +1,28 @@
-import { newPage, openBrowser, closeBrowser} from './pupeteerCreate/puppeter.js';
+import {newPage, openBrowser, closeBrowser, closePage} from './pupeteerCreate/puppeter.js';
 import { getDateToChooseProduct } from "./findingProductOnGoogle/getDateToChooseProduct.js"
 import { getLinksToProduct } from "./findingProductOnGoogle/getLinksToShops/getLinksToShops.js";
 import { goOnEachSite } from './goOnEachSite.js';
 import { proxies} from "./pupeteerCreate/proxy.js";
+import { changeRegion } from "./findingProductOnGoogle/getLinksToShops/changeRegion.js"
 
-
+const changeRegionGoogle = async(browser) => {
+    const regionPage = await newPage(browser)
+    await regionPage.goto("https://www.google.com/preferences?hl&prev",{
+        'waitUntil': 'networkidle2',
+        'timeout': 0
+    })
+    await changeRegion(regionPage)
+    await closePage(regionPage)
+}
 
 export const getDateForChooseProduct = async (productName) => {
     try {
         const proxy = proxies[0]
-        const {browser, chromeTmpDataDir} = await openBrowser(true, proxy)
-        const page = await browser.newPage()
+        const {browser, chromeTmpDataDir} = await openBrowser(false, proxy)
+        const page = await newPage(browser)
+        await page.goto("https://google.com")
+        await page.click("#L2AGLb")
+        await changeRegionGoogle(browser)
         const dateToChooseProduct = await getDateToChooseProduct(productName, page)
         closeBrowser(browser, chromeTmpDataDir)
         return dateToChooseProduct
@@ -24,7 +36,8 @@ export const getDateForChooseProduct = async (productName) => {
 export const startFollow = async (dateToChooseProduct) => {
     try {
         const proxy = proxies[0]
-        const {browser, chromeTmpDataDir} = await openBrowser(false, proxy)
+        const {browser, chromeTmpDataDir} = await openBrowser(true, proxy)
+       // await changeRegionGoogle(browser)
         const page = await newPage(browser)
         await page.goto(dateToChooseProduct.link, {
             'waitUntil': 'networkidle2',
