@@ -4,6 +4,7 @@ import { getLinksToProduct } from "./findingProductOnGoogle/getLinksToShops/getL
 import { goOnEachSite } from './goOnEachSite.js';
 import { proxies} from "./pupeteerCreate/proxy.js";
 import { changeRegion } from "./findingProductOnGoogle/getLinksToShops/changeRegion.js"
+import {isBrowserClose} from "../config.js";
 
 const changeRegionGoogle = async(browser) => {
     const regionPage = await newPage(browser)
@@ -18,7 +19,7 @@ const changeRegionGoogle = async(browser) => {
 export const getDateForChooseProduct = async (productName) => {
     try {
         const proxy = proxies[0]
-        const {browser, chromeTmpDataDir} = await openBrowser(false, proxy)
+        const {browser, chromeTmpDataDir} = await openBrowser(isBrowserClose, proxy)
         const page = await newPage(browser)
         await page.goto("https://google.com")
         await page.click("#L2AGLb")
@@ -36,7 +37,7 @@ export const getDateForChooseProduct = async (productName) => {
 export const startFollow = async (dateToChooseProduct) => {
     try {
         const proxy = proxies[0]
-        const {browser, chromeTmpDataDir} = await openBrowser(false, proxy)
+        const {browser, chromeTmpDataDir} = await openBrowser(isBrowserClose, proxy)
         await changeRegionGoogle(browser)
         const page = await newPage(browser)
         await page.goto(dateToChooseProduct.link, {

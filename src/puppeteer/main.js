@@ -1,7 +1,7 @@
 import {showAllFollowed, updatePrice} from "../mongoDB/server.js"
 import {goOnEachSite} from "./goOnEachSite.js";
 import {closeBrowser, openBrowser} from "./pupeteerCreate/puppeter.js";
-import {browserQuantity} from "../config.js"
+import {browserQuantity, isBrowserClose} from "../config.js"
 import {lowerPrice} from "../discord/main.js";
 import { proxies } from "./pupeteerCreate/proxy.js"
 
@@ -16,7 +16,7 @@ const checkSmallestPrice = async(newDataFromFollowed, listOfLinks) => {
 }
 
 const getDataFromWebsites = async (item, proxy) => {
-    const {browser, chromeTmpDataDir} = await openBrowser(true, proxy)
+    const {browser, chromeTmpDataDir} = await openBrowser(isBrowserClose, proxy)
     const newDataFromFollowed = {
         name: item.name,
         listOfLinks: await goOnEachSite(item.avergePrice, item.listOfLinks, browser)
