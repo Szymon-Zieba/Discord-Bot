@@ -1,11 +1,14 @@
 import { getAveragePrice } from "./getAvergePrice.js"
+import {showAllBlocked} from "../../../mongoDB/server.js"
 export const getLinksToProduct = async (page) => {
-    const linksToProduct = await page.evaluate(async() =>{
+    const allBlocked = await showAllBlocked()
+    const blockedTab = allBlocked.map(el => el.name)
+    const linksToProduct = await page.evaluate(async(blockedTab) =>{
         let dataProduct = []
         const fetchLinks = () => {
             let i = 1;
             document.querySelectorAll("#sh-osd__online-sellers-cont > .sh-osd__offer-row").forEach(data => {
-                if(!(data.querySelector('a').href).includes('allegro') && !(data.querySelector('a').href).includes('aliexpress') && !(data.querySelector('a').href).includes('erli.pl')){
+                if(!blockedTab.some(el => data.querySelector('a').href.includes(el)) ){
                     if(data.querySelector('td > span').innerText.split('PLN')[1] == "PLN"){
                         dataProduct.push({
                             price: parseFloat(data.querySelector('td > span').innerText.split('PLN')[1]),
@@ -35,7 +38,7 @@ export const getLinksToProduct = async (page) => {
             }
         }
         return dataProduct
-    })
+    }, blockedTab)
 
     const avergePrice = getAveragePrice(linksToProduct)
 

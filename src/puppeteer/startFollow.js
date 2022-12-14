@@ -37,7 +37,7 @@ export const startFollow = async (dateToChooseProduct) => {
     try {
         const proxy = proxies[0]
         const {browser, chromeTmpDataDir} = await openBrowser(true, proxy)
-       // await changeRegionGoogle(browser)
+        await changeRegionGoogle(browser)
         const page = await newPage(browser)
         await page.goto(dateToChooseProduct.link, {
             'waitUntil': 'networkidle2',

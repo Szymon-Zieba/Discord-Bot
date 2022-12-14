@@ -4,7 +4,7 @@ import fs from "fs-extra"
 export const openBrowser = async (check, proxy) => {
     const browser = await puppeteer.launch({
         // in DOCKER
-        //executablePath: '/usr/bin/chromium',
+        executablePath: '/usr/bin/chromium',
         headless: check,
         args: [
             '--lang=pl-PL,pl',

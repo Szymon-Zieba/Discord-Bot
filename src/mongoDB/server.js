@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import { Model, ModelBlackList } from "./schemas.js"
-//await mongoose.connect('mongodb://root:example@mongo:27017/')
-await mongoose.connect('mongodb://root:example@localhost:27017/')
+await mongoose.connect('mongodb://root:example@mongo:27017/')
+//await mongoose.connect('mongodb://root:example@localhost:27017/')
 
 export const follow = async (wholeData) => {
     const product = new Model({
@@ -56,6 +56,10 @@ export const blackList = async (name) => {
         }
         await updateBlockerPrice(newProduct)
     }
+}
+
+export const showAllBlocked = async () => {
+    return ModelBlackList.find();
 }
 
 export const deleteBlackList = async (name) => {

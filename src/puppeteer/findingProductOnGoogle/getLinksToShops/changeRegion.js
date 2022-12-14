@@ -4,5 +4,5 @@ export const changeRegion = async(page) => {
     await page.setExtraHTTPHeaders({
         'Accept-Language': 'pl'
     });
-    page.click('#regionoPL > div')
+    await page.click('#regionoPL > div')
 }

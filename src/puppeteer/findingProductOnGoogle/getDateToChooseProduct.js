@@ -10,7 +10,7 @@ export const getDateToChooseProduct = async(productName, page) => {
     await page.click("button")
     await page.waitForSelector(".i0X6df")
 
-    const dateToChoose = await page.evaluate(() =>{
+    const dateToChoose = await page.evaluate(async() =>{
         const date = []
         document.querySelectorAll(".i0X6df").forEach(offer => {
 
