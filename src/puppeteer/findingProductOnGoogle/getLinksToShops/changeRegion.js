@@ -1,10 +1,19 @@
+const getCookies = async(page) => {
+    const client = await page.target().createCDPSession();
+    const cookies = (await client.send('Network.getAllCookies')).cookies;
+    console.log(cookies)
+}
+
 export const changeRegion = async(page) => {
-    await page.on('dialog', async dialog => {
+    page.on('dialog', async dialog => {
         await dialog.accept()
     })
-    await page.click("#regionanchormore")
-    await page.waitForSelector("#regionoPL")
-    await page.click('#regionoPL > div')
-    await page.waitForSelector("#form-buttons > div.goog-inline-block.jfk-button.jfk-button-action")
-    await page.click("#form-buttons > div.goog-inline-block.jfk-button.jfk-button-action")
+    console.log("PUPPETER TO CWEL")
+    await page.evaluate(() => {
+        let el = document.querySelector('#regionoRU > div')
+        el.dispatchEvent(new MouseEvent('mousedown'))
+        el.dispatchEvent(new MouseEvent('mouseup'))
+        document.querySelector('form').submit()
+    })
+    console.log("O juz nie")
 }

@@ -6,14 +6,16 @@ import { proxies} from "./pupeteerCreate/proxy.js";
 import { changeRegion } from "./findingProductOnGoogle/getLinksToShops/changeRegion.js"
 import {isBrowserClose} from "../config.js";
 
-const changeRegionGoogle = async(browser) => {
-    const regionPage = await newPage(browser)
-    await regionPage.goto("https://www.google.com/preferences?hl&prev",{
-        'waitUntil': 'networkidle2',
-        'timeout': 0
+const regionWithCookies = async(page) => {
+    await page.goto("https://google.com", {
+        waitUntil: "load",
     })
-    await changeRegion(regionPage)
-    await closePage(regionPage)
+    await page.click("#L2AGLb")
+    await page.waitForNavigation({waitUntil: "load"})
+    await page.goto("https://www.google.com/preferences", {
+        waitUntil: "load",
+    })
+    await changeRegion(page)
 }
 
 export const getDateForChooseProduct = async (productName) => {
@@ -21,9 +23,8 @@ export const getDateForChooseProduct = async (productName) => {
         const proxy = proxies[0]
         const {browser, chromeTmpDataDir} = await openBrowser(isBrowserClose, proxy)
         const page = await newPage(browser)
-        await page.goto("https://google.com")
-        await page.click("#L2AGLb")
-        await changeRegionGoogle(browser)
+        await regionWithCookies(page)
+        await page.waitForNavigation({waitUntil: "load"})
         const dateToChooseProduct = await getDateToChooseProduct(productName, page)
         closeBrowser(browser, chromeTmpDataDir)
         return dateToChooseProduct
@@ -39,9 +40,9 @@ export const startFollow = async (dateToChooseProduct) => {
         const proxy = proxies[0]
         const {browser, chromeTmpDataDir} = await openBrowser(isBrowserClose, proxy)
         const page = await newPage(browser)
-        await page.goto("https://google.com")
-        await page.click("#L2AGLb")
-        await changeRegionGoogle(browser)
+
+        await regionWithCookies(page, browser)
+
         await page.goto(dateToChooseProduct.link, {
             'waitUntil': 'networkidle2',
             'timeout': 0

@@ -1,7 +1,9 @@
-import {domainStartURL, domainEndURL} from "./config.js"
+import {domainEndURL, domainStartURL} from "../../config.js";
+
 
 export const getDateToChooseProduct = async(productName, page) => {
-    const linkName = domainStartURL + productName + domainEndURL
+
+    const linkName = encodeURI(domainStartURL + productName + domainEndURL)
 
     await page.goto(linkName, {
         waitUntil: ['load', 'networkidle2', "domcontentloaded"],

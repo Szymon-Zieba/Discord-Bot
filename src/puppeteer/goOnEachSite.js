@@ -3,9 +3,6 @@ import {closePage, newPage} from "./pupeteerCreate/puppeter.js";
 
 const dataFromPage = async (page, avergePrice, link) => {
     try{
-        await page.setExtraHTTPHeaders({
-            'Accept-Language': 'pl'
-        });
         await page.goto(link, {
             waitUntil: 'networkidle2',
             timeout: 0
