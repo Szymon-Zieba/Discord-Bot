@@ -40,9 +40,8 @@ export const startFollow = async (dateToChooseProduct) => {
         const proxy = proxies[0]
         const {browser, chromeTmpDataDir} = await openBrowser(isBrowserClose, proxy)
         const page = await newPage(browser)
-
         await regionWithCookies(page, browser)
-
+        await page.waitForNavigation({waitUntil: "load"})
         await page.goto(dateToChooseProduct.link, {
             'waitUntil': 'networkidle2',
             'timeout': 0
