@@ -1,9 +1,3 @@
-const getCookies = async(page) => {
-    const client = await page.target().createCDPSession();
-    const cookies = (await client.send('Network.getAllCookies')).cookies;
-    console.log(cookies)
-}
-
 export const changeRegion = async(page) => {
     page.on('dialog', async dialog => {
         await dialog.accept()

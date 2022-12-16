@@ -3,12 +3,13 @@ import {showAllBlocked} from "../../../mongoDB/server.js"
 export const getLinksToProduct = async (page) => {
     const allBlocked = await showAllBlocked()
     const blockedTab = allBlocked.map(el => el.name)
+    console.log(blockedTab)
     const linksToProduct = await page.evaluate(async(blockedTab) =>{
         let dataProduct = []
         const fetchLinks = () => {
             let i = 1;
             document.querySelectorAll("#sh-osd__online-sellers-cont > .sh-osd__offer-row").forEach(data => {
-                if(!blockedTab.some(el => data.querySelector('a').href.includes(el)) ){
+                if(!blockedTab.some(el => " " + data.querySelector('a').href.includes(el)) ){
                     if(data.querySelector('td > span').innerText.split('PLN')[1] == "PLN"){
                         dataProduct.push({
                             price: parseFloat(data.querySelector('td > span').innerText.split('PLN')[1]),
