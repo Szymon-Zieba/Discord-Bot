@@ -1,7 +1,7 @@
 import {blackList, checkExistBlackList, deleteBlackList} from "../mongoDB/server.js";
 
 export const block = async(msg) => {
-    let shop = msg.content.split("!block")[1]
+    let shop = msg.content.split("!block ")[1]
     if(!shop){
         msg.reply( "You want to block nothing?")
         return
@@ -15,7 +15,7 @@ export const block = async(msg) => {
 }
 
 export const unblock = async (msg) => {
-    let unblockProduct = msg.content.split("!unblock")[1]
+    let unblockProduct = msg.content.split("!unblock ")[1]
     await deleteBlackList(unblockProduct)
     msg.reply("Successful deleted from blacklist '" + unblockProduct + "'" )
 }

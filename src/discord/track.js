@@ -2,7 +2,7 @@ import { startFollow, getDateForChooseProduct } from "../puppeteer/startFollow.j
 import { follow, checkExistProduct } from "../mongoDB/server.js";
 
 export const track = async (msg) => {
-    let product = msg.content.split("!track")[1]
+    let product = msg.content.split("!track ")[1]
     if( await checkExistProduct(product, msg)){
       return
     }

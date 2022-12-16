@@ -39,11 +39,11 @@ client.on('messageCreate', async (msg) => {
             await commands(msg)
             break
 
-        case content.startsWith("!track"):
+        case content.startsWith("!track "):
             await track(msg)
             break
 
-        case content.startsWith("!delete"):
+        case content.startsWith("!delete "):
             await unFollowProduct(msg)
             break
 
@@ -51,11 +51,11 @@ client.on('messageCreate', async (msg) => {
             await showFollowed(msg)
             break
 
-        case content.startsWith("!block"):
+        case content.startsWith("!block "):
             await block(msg)
             break
 
-        case content.startsWith("!unblock"):
+        case content.startsWith("!unblock "):
             await unblock(msg)
             break
 
