@@ -9,7 +9,7 @@ export const getLinksToProduct = async (page) => {
         const fetchLinks = () => {
             let i = 1;
             document.querySelectorAll("#sh-osd__online-sellers-cont > .sh-osd__offer-row").forEach(data => {
-                if(!blockedTab.some(el => " " + data.querySelector('a').href.includes(el)) ){
+                if(!blockedTab.some(el => data.querySelector('a').href.includes(el)) ){
                     if(data.querySelector('td > span').innerText.split('PLN')[1] == "PLN"){
                         dataProduct.push({
                             price: parseFloat(data.querySelector('td > span').innerText.split('PLN')[1]),
