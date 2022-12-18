@@ -1,11 +1,4 @@
 export const findPriceByMeta = (page, avergePrice) =>  page.evaluate(async(avergePrice) => {
-    const splitedPrice  = (price) => {
-        price = price
-            .replace(/[^0-9]/g, '#')
-            .split('#')
-            .filter(e => e != '')
-        return price[0] + '.' + price[1] ?? -1
-    }
 
     const closesToOne = (decodedPrice) => {
         let dividedDecodedToAvarage = decodedPrice/ avergePrice
@@ -24,18 +17,29 @@ export const findPriceByMeta = (page, avergePrice) =>  page.evaluate(async(averg
         return 0
     }
 
-    const elements = [...document.querySelectorAll('meta')]
+    const splitPrice = (element) => {
+        let content = (element.split('"offers"')[1]).split("brand")[0]
+        if(content.includes("InStock")){
+            let content = (element.split('"offers"')[1]).split("brand")[0]
+            return (content.split('"price":')[1]).split(",")[0]
+        }
+    }
+
+    const elements = [...document.querySelectorAll('script[type="application/ld+json"]')]
     const items= []
     let filtered = []
     elements.forEach(el => {
-        let content = el.content 
+        const element = el.text
+        if(element){
+            if(element.includes("offers")){
+                const decodedPrice = splitPrice(element)
 
-        decodedPrice = splitedPrice(content)
-        
-        items.push({
-            price: decodedPrice,
-            closes: closesToOne(decodedPrice)
-        })
+                items.push({
+                    price: decodedPrice,
+                    closes: closesToOne(decodedPrice)
+                })
+            }
+        }
     })
     filtered = items.filter(
             p =>  p.price != ''
@@ -45,7 +49,6 @@ export const findPriceByMeta = (page, avergePrice) =>  page.evaluate(async(averg
     filtered.sort((a, b) => {
             const divideB = b.closes * b.closes
             const divideA = a.closes * a.closes
-
             return divideB - divideA
     })
 

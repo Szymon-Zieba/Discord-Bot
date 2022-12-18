@@ -1,5 +1,6 @@
 import {findPriceByTextContent} from "./findingPrice/findPriceByTextContent.js"
 import {closePage, newPage} from "./pupeteerCreate/puppeter.js";
+import {findBestPrice} from "./findingPrice/findBestPrice.js";
 
 const dataFromPage = async (page, avergePrice, link) => {
     try{
@@ -7,7 +8,7 @@ const dataFromPage = async (page, avergePrice, link) => {
             waitUntil: 'networkidle2',
             timeout: 0
         })
-        let price = await findPriceByTextContent(page, avergePrice)
+        let price = await findBestPrice(page, avergePrice)
         await closePage(page)
         return price
     }
