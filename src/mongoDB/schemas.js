@@ -1,15 +1,12 @@
 import mongoose from "mongoose"
 
-const productsSchema = new mongoose.Schema({
-    name: String,
-    avergePrice: Number,
-    listOfLinks: Array
+const Schema = new mongoose.Schema({
+    id: String,
+    products: [{
+        name: String,
+        avergePrice: String,
+        listOfLinks: Array
+    }],
+    blackList: Array,
 })
-
-export const Model = mongoose.model("Products", productsSchema)
-
-const blackListSchema = new mongoose.Schema({
-    name: String
-})
-
-export const ModelBlackList = mongoose.model("BlackList", blackListSchema)
+export const ModelUsers = mongoose.model("Users", Schema)

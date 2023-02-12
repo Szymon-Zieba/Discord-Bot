@@ -6,16 +6,25 @@ export const block = async(msg) => {
         msg.reply( "You want to block nothing?")
         return
     }
-    if(await checkExistBlackList(shop, msg)){
+    if(await checkExistBlackList(shop, msg.author.id)){
+        msg.reply("Exist in database")
         return
     }
+    try{
+        await blackList(msg.author.id, shop)
+        msg.reply("Successful block : " + shop)
+    }catch(err){
+        console.log(err)
+    }
 
-    await blackList(shop)
-    msg.reply("Successful block : " + shop)
 }
 
 export const unblock = async (msg) => {
     let unblockProduct = msg.content.split("!unblock ")[1]
-    await deleteBlackList(unblockProduct)
-    msg.reply("Successful deleted from blacklist '" + unblockProduct + "'" )
+    try{
+        await deleteBlackList(msg.author.id, unblockProduct)
+        msg.reply("Successful deleted from blacklist '" + unblockProduct + "'" )
+    }catch(err){
+        msg.channel.send("Error")
+    }
 }

@@ -3,9 +3,10 @@ import { follow, checkExistProduct } from "../mongoDB/server.js";
 
 export const track = async (msg) => {
     let product = msg.content.split("!track ")[1]
-    if( await checkExistProduct(product, msg)){
+    if(await checkExistProduct(msg, product)){
       return
     }
+    console.log("New track")
     if(!product){
       msg.reply( "You want to track nothing?")
       return
@@ -26,14 +27,14 @@ export const track = async (msg) => {
         return
     }
     msg.reply("Wait we are searching for best price...")
-    const { dataOfProductFromWebsite, avergePrice} = await startFollow(dateToChooseProduct[index - 1])
+    const { dataOfProductFromWebsite, avergePrice} = await startFollow(dateToChooseProduct[index - 1], msg.author.id)
     if(!dataOfProductFromWebsite[0] ){
-        msg.channel.send(
+        msg.reply(
             "No product"
         )
         return
     }
-    msg.channel.send(
+    msg.reply(
       "Succes the smallest price of " + product + " is: " + dataOfProductFromWebsite[0].price + "\n" +
       "Link: " + dataOfProductFromWebsite[0].link + "\n" +
       "If the price will be smaller we will let you know!!"
@@ -45,7 +46,7 @@ export const track = async (msg) => {
       listOfLinks: dataOfProductFromWebsite
     }
 
-    await follow(wholeData, msg)
+    await follow(msg.author.id, wholeData)
 }
 
 const replyDateToChooseProduct = (dateToChooseProduct) => {

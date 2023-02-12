@@ -8,5 +8,4 @@ export const changeRegion = async(page) => {
         el.dispatchEvent(new MouseEvent('mouseup'))
         document.querySelector('form').submit()
     })
-    console.log("O juz nie")
 }

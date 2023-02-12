@@ -17,9 +17,7 @@ const dataFromPage = async (page, avergePrice, link) => {
         console.log("error in hanglePage")
         return false
     }
-
 }
-
 const hanglePage = async (link, avergePrice, browser) => {
     const page = await newPage(browser)
     let price = false
@@ -27,8 +25,10 @@ const hanglePage = async (link, avergePrice, browser) => {
     while(price === false && attempts < 5) {
         price = await dataFromPage(page, avergePrice, link)
         attempts += 1;
-        if (price === false) {
-            await new Promise((resolve) => setTimeout(resolve, 3000));
+        console.log(attempts)
+        if (!price) {
+            setTimeout((r) => r, 3000)
+            console.log("hello")
         }
     }
     return {price, link}

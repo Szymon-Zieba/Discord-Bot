@@ -1,51 +1,61 @@
-export const findPriceByScript = (page, avergePrice) => 
-    page.evaluate(async(avergePrice) => {
-        const splitedPrice = (name, price) => {
-            let split
-            split += price
-                .split(name)
-                .pop()
-            split = split
-                .replace(/[^0-9]/g, '#')
-                .split('#')
-                .filter(e => e != '')
-            return split
+export const findPriceByScript = (page, avergePrice) =>  page.evaluate(async(avergePrice) => {
+
+    const closesToOne = (decodedPrice) => {
+        let dividedDecodedToAvarage = decodedPrice/ avergePrice
+        if(dividedDecodedToAvarage > 2){
+            return 0
         }
 
-        const decodePrice = (price) => {
-            const valueToFind = ["price", "value", "price :"]
-            let splitPrice
-            for(let i = 0; i < valueToFind.length; i++){
-                let valueFinded = valueToFind[i]
-                if(price.includes(valueFinded)){
-                    splitPrice = splitedPrice(valueFinded, price)
-                }
+        else if(dividedDecodedToAvarage <= 1){
+            return dividedDecodedToAvarage
+        }
+
+        else if(dividedDecodedToAvarage <= 2 && dividedDecodedToAvarage > 1){
+            return 2 - dividedDecodedToAvarage
+        }
+
+        return 0
+    }
+
+    const splitPrice = (element) => {
+        let content = (element.split('"offers"')[1]).split("brand")[0]
+        if(content.includes("InStock")){
+            let content = (element.split('"offers"')[1]).split("brand")[0]
+            return (content.split('"price":')[1]).split(",")[0]
+        }
+    }
+
+    const elements = [...document.querySelectorAll('script[type="application/ld+json"]')]
+    const items= []
+    let filtered = []
+    elements.forEach(el => {
+        const element = el.text
+        if(element){
+            if(element.includes("offers")){
+                const decodedPrice = splitPrice(element)
+
+                items.push({
+                    price: decodedPrice,
+                    closes: closesToOne(decodedPrice)
+                })
             }
-            return splitPrice ?? ''
         }
+    })
+    filtered = items.filter(
+        p =>  p.price != ''
+            && p.closes != 0
+    )
 
-        const elements = [...document.querySelectorAll('script')]
-        let items= []
-        let filtered = []
-        elements.forEach(el => {
-            let content = el.textContent 
-            items.push(
-                decodePrice(content)
-            )
-        })
-        filtered = items.filter(
-            p =>  p != '' ,
-            p => !p.startsWith(0)
-        )
-        items= []
-        for(let i = 1; i < filtered.length; i++){
-            items = items.concat(filtered[i])
-        }
-        const closesPrice = items.map(e => [e, Math.abs(avergePrice - e)]).sort((a, b) => a[1] - b[1])
-        if(!closesPrice[0]){
-            return -1
-        }
-        else{
-            return closesPrice[0][0]
-        }
-    }, avergePrice)
+    filtered.sort((a, b) => {
+        const divideB = b.closes * b.closes
+        const divideA = a.closes * a.closes
+        return divideB - divideA
+    })
+
+    if(!filtered[0]){
+        return -1
+    }
+    else{
+        return filtered[0].price
+    }
+}, avergePrice)

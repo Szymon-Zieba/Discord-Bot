@@ -35,7 +35,7 @@ export const getDateForChooseProduct = async (productName) => {
     }
 }
 
-export const startFollow = async (dateToChooseProduct) => {
+export const startFollow = async (dateToChooseProduct, authorID) => {
     try {
         const proxy = proxies[0]
         const {browser, chromeTmpDataDir} = await openBrowser(isBrowserClose, proxy)
@@ -46,7 +46,7 @@ export const startFollow = async (dateToChooseProduct) => {
             'waitUntil': 'networkidle2',
             'timeout': 0
         })
-        const {linksToProduct, avergePrice} = await getLinksToProduct(page)
+        const {linksToProduct, avergePrice} = await getLinksToProduct(page, authorID)
         let dataOfProductFromWebsite
         try{
             const followed = await goOnEachSite(avergePrice, linksToProduct, browser)
