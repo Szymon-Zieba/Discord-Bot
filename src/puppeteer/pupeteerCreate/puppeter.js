@@ -3,7 +3,7 @@ import fs from "fs-extra"
 
 export const openBrowser = async (check, proxy) => {
     const browser = await puppeteer.launch({
-        executablePath: '/usr/bin/chromium',
+        // executablePath: '/usr/bin/chromium',
         headless: check,
         args: [
             '--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.125 Safari/537.36',
@@ -31,12 +31,10 @@ export const openBrowser = async (check, proxy) => {
 
 export const newPage = async(browser) =>  await browser.newPage()
 
-export const closePage = async(page) => await page.close()
-
 export const closeBrowser = (browser, chromeTmpDataDir) => {
     browser.close()
     if (chromeTmpDataDir !== null) {
-        fs.removeSync(chromeTmpDataDir);
+        // fs.removeSync(chromeTmpDataDir);
     }
 }
 

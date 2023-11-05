@@ -1,6 +1,6 @@
 export const findPriceByTextContent = async (page, avergePrice) =>
     await page.evaluate(async(avergePrice) => {
-        // const avergePrice = 3
+        //const avergePrice = 100
         const getElementComputedStyle = (el, property) => window.getComputedStyle(el, null).getPropertyValue(property)
 
         const decodePrice = (price) => {
@@ -10,11 +10,9 @@ export const findPriceByTextContent = async (page, avergePrice) =>
                 .filter(e => e != '')
     
             let decodedPrice = ''
-    
             for(let i = 0; i < splitPrice.length; i++) {
                 const fragment = splitPrice[i]
-    
-                const separator = i > 0 && fragment.length < 3 ? '.' : ''
+                const separator = i > 0 && fragment?.length < 3 ? '.' : ''
                 
                 decodedPrice += separator + fragment
             }
@@ -40,7 +38,6 @@ export const findPriceByTextContent = async (page, avergePrice) =>
             let content = el.textContent          
 
             const currieces = /zl|zł|pln|,-/i
-            
             if(el.children.length > 5 || !(currieces.test(content))) {
                 return 
             }
@@ -63,7 +60,7 @@ export const findPriceByTextContent = async (page, avergePrice) =>
             !isNaN(p.text) 
             && p.text != '' 
             && p.offsetTop > 100 
-            && p.offsetTop < 700
+            && p.offsetTop < 2000
             && p.text > avergePrice * 0.15  
         )
 

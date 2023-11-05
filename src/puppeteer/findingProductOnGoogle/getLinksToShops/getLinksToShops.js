@@ -36,6 +36,7 @@ export const getLinksToProduct = async (page, authorID) => {
         return dataProduct
     }, allBlocked)
 
+    await page.close()
     const avergePrice = getAveragePrice(linksToProduct)
 
     return {linksToProduct, avergePrice}

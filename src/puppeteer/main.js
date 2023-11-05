@@ -6,10 +6,12 @@ import {lowerPrice} from "../discord/main.js";
 import { proxies } from "./pupeteerCreate/proxy.js"
 
 const checkSmallestPrice = async(newDataFromFollowed, listOfLinks, authorID) => {
+    if(listOfLinks.length < 1) return
     for(let i = 0; i < newDataFromFollowed.length; i++){
         const newProduct = newDataFromFollowed[i]
         const newPrice = parseFloat(newProduct.price)
         const element = listOfLinks.find(el => el.price > 0)
+        if(!element?.price) return
         if(newPrice < parseFloat(element.price) && newPrice > 0){
             await lowerPrice(newProduct.link, newProduct.price, authorID)
         }
@@ -35,7 +37,6 @@ const getNewFollowed = async(followed, authorID) => {
             chunk = followed.slice(i, i+browserQuantity)
         }
         await Promise.all(chunk.map(item => getDataFromWebsites(item, proxy, authorID)))
-        console.log("OK")
         index++
         if(index === proxies.length){
             index = 0
@@ -43,7 +44,6 @@ const getNewFollowed = async(followed, authorID) => {
     }
 }
 const searchFollowedSites = async(i) => {
-    console.log("refresh")
     const followed = await showAllFollowed()
     if (followed) {
         for(const el of followed){
