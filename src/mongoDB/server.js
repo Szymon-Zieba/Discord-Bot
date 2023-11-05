@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 import {ModelUsers } from "./schemas.js"
-await mongoose.connect('mongodb://root:example@mongo:27017/')
-//await mongoose.connect('mongodb://root:example@localhost:27017/')
+// await mongoose.connect('mongodb://root:example@mongo:27017/')
+await mongoose.connect('mongodb://root:example@localhost:27017/')
 
 export const follow = async (authorID, wholeData) => {
     const isUser = await ModelUsers.exists({id: authorID})
